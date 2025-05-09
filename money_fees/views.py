@@ -1,12 +1,7 @@
 from rest_framework import viewsets
 
 from .models import Collect, Payment, User
-from .serializers import CollectSerializer, PaymentSerializer, UserSerializer
-
-
-class UserCreateView(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+from .serializers import CollectSerializer, PaymentSerializer
 
 
 class CollectViewSet(viewsets.ModelViewSet):
