@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 
-from .models import Collect, Payment, User
+from .models import Collect, Payment
 from .serializers import CollectSerializer, PaymentSerializer
 
 

@@ -1,5 +1,4 @@
 from django.contrib import admin
-from rest_framework.authtoken import views
 from django.urls import include, path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view

@@ -27,26 +27,36 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        fields = '__all__'
+        fields = ['amount', 'created_at', 'collec_fees']
 
     def get_created_at(self, obj):
         date_time = obj.created_at
         return date_time.strftime("%Y-%m-%d %H:%M:%S")
 
     def create(self, validated_data):
+        user = self.context['request'].user
         collec_fees = validated_data.pop('collec_fees')
+        if collec_fees.end_date:
+            raise serializers.ValidationError(
+                f'Выберите другой сбор. Этот сбор завершен {
+                    collec_fees.end_date.strftime("%Y-%m-%d %H:%M:%S")
+                }'
+            )
         collec_fees.curr_sum_fees += validated_data['amount']
         if collec_fees.sum_fees <= collec_fees.curr_sum_fees:
             collec_fees.end_date = dt.datetime.now()
         data_pay = Payment.objects.filter(
-            user=validated_data['user'],
+            user=user,
             collec_fees=collec_fees
         )
         if not data_pay.exists():
             collec_fees.donors_count += 1
         collec_fees.save()
         payment = Payment.objects.create(
-            collec_fees=collec_fees, **validated_data)
+            user=user,
+            collec_fees=collec_fees,
+            **validated_data
+        )
         return payment
 
 
@@ -104,16 +114,3 @@ class CollectSerializer(serializers.ModelSerializer):
         """Представление."""
         data = super().to_representation(instance)
         return data
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        user = User(**validated_data)
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
