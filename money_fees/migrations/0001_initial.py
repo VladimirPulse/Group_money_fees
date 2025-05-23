@@ -32,7 +32,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "sum_invest",
-                    models.IntegerField(default=0, verbose_name="Сумма перевода"),
+                    models.IntegerField(
+                        default=0, verbose_name="Сумма перевода"
+                    ),
                 ),
                 (
                     "user",

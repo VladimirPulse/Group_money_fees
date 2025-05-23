@@ -9,14 +9,14 @@ class CacheMiddleware(MiddlewareMixin):
 
     def process_response(self, request, response):
         """Проверка перед обработкой запроса и сохранение в кэш."""
-        if request.method == 'GET' and response.status_code == 200:
+        if request.method == "GET" and response.status_code == 200:
             cache_key = self.get_cache_key(request)
             cache.set(cache_key, response.content, timeout=60 * 15)
         return response
 
     def process_request(self, request):
         """Проверяем кэш."""
-        if request.method == 'GET':
+        if request.method == "GET":
             cache_key = self.get_cache_key(request)
             cached_response = cache.get(cache_key)
             if cached_response:

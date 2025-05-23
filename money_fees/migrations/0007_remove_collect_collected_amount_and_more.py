@@ -36,7 +36,10 @@ class Migration(migrations.Migration):
             model_name="collect",
             name="slug",
             field=models.CharField(
-                choices=[("birthday", "День рождения"), ("wedding", "Свадьба")],
+                choices=[
+                    ("birthday", "День рождения"),
+                    ("wedding", "Свадьба"),
+                ],
                 default="birthday",
                 max_length=255,
                 verbose_name="Повод сбора",

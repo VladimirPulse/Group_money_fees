@@ -15,7 +15,10 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name="payment",
-            options={"verbose_name": "Инвестиция", "verbose_name_plural": "Инвестиции"},
+            options={
+                "verbose_name": "Инвестиция",
+                "verbose_name_plural": "Инвестиции",
+            },
         ),
         migrations.CreateModel(
             name="Collect",
@@ -31,7 +34,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "title_fees",
-                    models.CharField(max_length=16, verbose_name="Название сбора"),
+                    models.CharField(
+                        max_length=16, verbose_name="Название сбора"
+                    ),
                 ),
                 (
                     "slug",
@@ -51,15 +56,21 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "curr_sum_fees",
-                    models.IntegerField(default=0, verbose_name="Текущая сумма сбора"),
+                    models.IntegerField(
+                        default=0, verbose_name="Текущая сумма сбора"
+                    ),
                 ),
                 (
                     "num_people",
-                    models.IntegerField(verbose_name="Количество инвестировавших"),
+                    models.IntegerField(
+                        verbose_name="Количество инвестировавших"
+                    ),
                 ),
                 (
                     "fees_date",
-                    models.DateTimeField(verbose_name="Дата и время завершения сбора"),
+                    models.DateTimeField(
+                        verbose_name="Дата и время завершения сбора"
+                    ),
                 ),
                 (
                     "author",

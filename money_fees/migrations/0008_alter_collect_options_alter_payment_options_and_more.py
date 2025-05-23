@@ -20,7 +20,10 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name="payment",
-            options={"verbose_name": "Инвестиция", "verbose_name_plural": "Инвестиции"},
+            options={
+                "verbose_name": "Инвестиция",
+                "verbose_name_plural": "Инвестиции",
+            },
         ),
         migrations.RemoveField(
             model_name="payment",

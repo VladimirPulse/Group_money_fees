@@ -10,6 +10,7 @@ class CollectViewSet(viewsets.ModelViewSet):
     serializer_class = CollectSerializer
 
     def create(self, request, *args, **kwargs):
+        request.data["author"] = request.user.id
         response = super().create(request, *args, **kwargs)
         cache.clear()
         return response

@@ -20,6 +20,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="collect",
             name="image",
-            field=models.ImageField(default=None, null=True, upload_to="images/"),
+            field=models.ImageField(
+                default=None, null=True, upload_to="images/"
+            ),
         ),
     ]

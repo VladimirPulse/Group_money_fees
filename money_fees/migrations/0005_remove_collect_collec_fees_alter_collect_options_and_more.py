@@ -65,7 +65,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="collect",
             name="collected_amount",
-            field=models.DecimalField(decimal_places=2, default=0, max_digits=10),
+            field=models.DecimalField(
+                decimal_places=2, default=0, max_digits=10
+            ),
         ),
         migrations.AddField(
             model_name="collect",
@@ -86,7 +88,10 @@ class Migration(migrations.Migration):
             model_name="collect",
             name="reason",
             field=models.CharField(
-                choices=[("birthday", "День рождения"), ("wedding", "Свадьба")],
+                choices=[
+                    ("birthday", "День рождения"),
+                    ("wedding", "Свадьба"),
+                ],
                 default="birthday",
                 max_length=255,
             ),
@@ -94,7 +99,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="collect",
             name="target_amount",
-            field=models.DecimalField(decimal_places=2, default=1, max_digits=10),
+            field=models.DecimalField(
+                decimal_places=2, default=1, max_digits=10
+            ),
         ),
         migrations.AddField(
             model_name="collect",
@@ -104,7 +111,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="payment",
             name="amount",
-            field=models.DecimalField(decimal_places=2, default=0, max_digits=10),
+            field=models.DecimalField(
+                decimal_places=2, default=0, max_digits=10
+            ),
         ),
         migrations.AddField(
             model_name="payment",
@@ -130,7 +139,8 @@ class Migration(migrations.Migration):
             model_name="payment",
             name="user",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
             ),
         ),
         migrations.DeleteModel(

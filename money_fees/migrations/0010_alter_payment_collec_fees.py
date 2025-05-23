@@ -7,7 +7,10 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("money_fees", "0009_remove_collect_collec_fees_payment_collec_fees_and_more"),
+        (
+            "money_fees",
+            "0009_remove_collect_collec_fees_payment_collec_fees_and_more",
+        ),
     ]
 
     operations = [

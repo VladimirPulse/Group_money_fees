@@ -6,7 +6,10 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("money_fees", "0003_remove_collect_fees_date_alter_collect_num_people"),
+        (
+            "money_fees",
+            "0003_remove_collect_fees_date_alter_collect_num_people",
+        ),
     ]
 
     operations = [
