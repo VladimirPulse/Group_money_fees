@@ -1,10 +1,16 @@
 import base64
 import datetime as dt
+import logging
 
 from django.core.files.base import ContentFile
+from django.core.mail import send_mail
 from rest_framework import serializers
 
+from group_money_fees.settings import DEFAULT_FROM_EMAIL
+
 from .models import Collect, Payment, User
+
+logger = logging.getLogger(__name__)
 
 
 class Base64ImageField(serializers.ImageField):
@@ -51,6 +57,14 @@ class PaymentSerializer(serializers.ModelSerializer):
         collec_fees.save()
         payment = Payment.objects.create(
             user=user, collec_fees=collec_fees, **validated_data
+        )
+        logger.info(f"Отправка письма пользователю: {user.email}")
+        send_mail(
+            subject="Подтверждение транзакции",
+            message="Успешно создана инвестиция",
+            from_email=DEFAULT_FROM_EMAIL,
+            recipient_list=[f"{user.email}"],
+            fail_silently=True,
         )
         return payment
 

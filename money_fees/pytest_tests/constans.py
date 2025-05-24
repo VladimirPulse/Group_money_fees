@@ -10,7 +10,7 @@ URL_COLLECT = "/api/collects/"
 URL_PAY = "/api/payments/"
 DEFAULT_SLUG = "birthday"
 
-'''Создаем константу тестового изображения'''
+"""Создаем константу тестового изображения"""
 image = Image.new("RGB", (1, 1), color="white")
 buffered = BytesIO()
 image.save(buffered, format="JPEG")
