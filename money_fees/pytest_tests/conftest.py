@@ -1,6 +1,7 @@
 import os
 import shutil
 
+import docker
 import pytest
 from django.conf import settings
 from rest_framework.test import APIClient
@@ -27,6 +28,16 @@ def author_collect(client, django_user_model):
 
 
 @pytest.fixture
+def user_investor(client, django_user_model):
+    user = django_user_model.objects.create(
+        username="user2", email="test_user2@example.com"
+    )
+    client = APIClient()
+    client.force_authenticate(user=user)
+    return client
+
+
+@pytest.fixture
 def user_data():
     return {"username": "testuser", "password": "testpassword"}
 
@@ -42,7 +53,7 @@ def collectload():
 
 @pytest.fixture
 def payload():
-    return {"amount": 1000, "collec_fees": 1}
+    return {"amount": 500, "collec_fees": 1}
 
 
 @pytest.fixture
@@ -55,3 +66,12 @@ def list_collects(author_collect):
             description="This is a test collect.",
             sum_fees=100,
         )
+
+
+@pytest.fixture(scope="session")
+def docker_container():
+    client = docker.from_env()
+    container = client.containers.run("your_image_name", detach=True)
+    yield container
+    container.stop()
+    container.remove()
