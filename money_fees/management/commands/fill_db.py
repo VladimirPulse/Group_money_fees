@@ -15,7 +15,6 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # Создание нескольких пользователей
         users = [User.objects.create(username=f"user{i}") for i in range(1, 6)]
-
         # Создание тестовых групповых сборов
         collect_list = []
         for i in range(10):
@@ -56,11 +55,18 @@ class Command(BaseCommand):
             available_collects = get_available_collects()
             selected_collect = random.choice(available_collects)
             payment_data = {
-                "user": random.choice(users).id,
+                # "user": random.choice(users).id,
+                "user": random.choice(users),
                 "amount": random.randint(100, 1000),
                 "collec_fees": selected_collect.id,
             }
-            serializer = PaymentSerializer(data=payment_data)
+            context = {}
+            context = {
+                "request": type(
+                    "Request", (), {"user": payment_data["user"]}
+                )()
+            }
+            serializer = PaymentSerializer(data=payment_data, context=context)
             if serializer.is_valid():
                 serializer.save()
             else:

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db import models
 
 User = get_user_model()
@@ -9,6 +10,7 @@ class Collect(models.Model):
     title = models.CharField(max_length=255, default="попытка")
     slug = models.CharField(
         max_length=255,
+        blank=True,
         choices=[
             ("birthday", "День рождения"),
             ("wedding", "Свадьба"),
@@ -25,15 +27,16 @@ class Collect(models.Model):
     )
     curr_sum_fees = models.DecimalField(
         max_digits=10,
+        blank=True,
         decimal_places=2,
         default=0,
         verbose_name="Текущая сумма сбора",
     )
-    donors_count = models.PositiveIntegerField(default=0)
+    donors_count = models.PositiveIntegerField(blank=True, default=0)
     image = models.ImageField(
         upload_to="images/", blank=True, default=None, null=True
     )
-    end_date = models.DateTimeField(null=True)
+    end_date = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         verbose_name = "Группа сбора"
@@ -57,3 +60,11 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.amount}"
+
+    def clean(self):
+        if self.collec_fees.end_date:
+            raise ValidationError(
+                f'Выберите другой сбор. Этот сбор завершен {
+                    self.collec_fees.end_date.strftime("%Y-%m-%d %H:%M:%S")
+                }'
+            )

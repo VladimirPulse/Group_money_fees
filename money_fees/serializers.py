@@ -1,6 +1,4 @@
 import base64
-import datetime as dt
-import logging
 
 from django.core.files.base import ContentFile
 from django.core.mail import send_mail
@@ -9,8 +7,6 @@ from rest_framework import serializers
 from group_money_fees.settings import DEFAULT_FROM_EMAIL
 
 from .models import Collect, Payment, User
-
-logger = logging.getLogger(__name__)
 
 
 class Base64ImageField(serializers.ImageField):
@@ -41,24 +37,14 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = self.context["request"].user
-        collec_fees = validated_data.pop("collec_fees")
+        validated_data["user"] = user
+        collec_fees = validated_data["collec_fees"]
         if collec_fees.end_date:
             raise serializers.ValidationError(
                 f'Выберите другой сбор. Этот сбор завершен {
                     collec_fees.end_date.strftime("%Y-%m-%d %H:%M:%S")
                 }'
             )
-        collec_fees.curr_sum_fees += validated_data["amount"]
-        if collec_fees.sum_fees <= collec_fees.curr_sum_fees:
-            collec_fees.end_date = dt.datetime.now()
-        data_pay = Payment.objects.filter(user=user, collec_fees=collec_fees)
-        if not data_pay.exists():
-            collec_fees.donors_count += 1
-        collec_fees.save()
-        payment = Payment.objects.create(
-            user=user, collec_fees=collec_fees, **validated_data
-        )
-        logger.info(f"Отправка письма пользователю: {user.email}")
         send_mail(
             subject="Подтверждение транзакции",
             message="Успешно создана инвестиция",
@@ -66,7 +52,7 @@ class PaymentSerializer(serializers.ModelSerializer):
             recipient_list=[f"{user.email}"],
             fail_silently=True,
         )
-        return payment
+        return super().create(validated_data)
 
 
 class PaymentCollectSerializer(serializers.ModelSerializer):
