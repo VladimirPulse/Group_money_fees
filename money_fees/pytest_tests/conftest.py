@@ -1,8 +1,6 @@
 import os
 import shutil
-import time
 
-import docker
 import pytest
 from django.conf import settings
 from rest_framework.test import APIClient
@@ -67,24 +65,3 @@ def list_collects(author_collect):
             description="This is a test collect.",
             sum_fees=100,
         )
-
-
-@pytest.fixture(scope="session")
-def docker_container():
-    client = docker.from_env()
-    container = client.containers.run(
-        "fees_backend", detach=True, ports={"8000/tcp": 8000}
-    )
-    # Ждем, пока контейнер не перейдет в состояние "running"
-    timeout = 30
-    start_time = time.time()
-    while container.status != "running":
-        container.reload()
-        if time.time() - start_time > timeout:
-            raise TimeoutError(
-                "Контейнер не запустился в течение заданного времени"
-            )
-        time.sleep(1)
-    yield container
-    container.stop()
-    container.remove()
